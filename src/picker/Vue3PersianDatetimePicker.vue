@@ -80,375 +80,399 @@
       >
         <div ref="container" class="vpd-container">
           <div class="vpd-content">
-            <div
-              v-if="!simple"
-              class="vpd-header"
-              :style="{ 'background-color': color }"
+            <slot
+              name="vpd-header"
+              v-bind="{
+                vm,
+                selectedDate,
+                color,
+                locales,
+                setLocale,
+                lang,
+                goToday,
+                goStep
+              }"
             >
               <div
-                v-if="['date', 'datetime', 'year-month'].indexOf(type) !== -1"
-                :class="['vpd-year-label', directionClass]"
-                @click="goStep('y')"
+                v-if="!simple"
+                class="vpd-header"
+                :style="{ 'background-color': color }"
               >
-                <transition name="slideY">
-                  <span :key="selectedDate.xYear()">
-                    <slot name="header-year" v-bind="{ vm, selectedDate }">
-                      {{ convertToLocaleNumber(selectedDate.xYear()) }}
-                    </slot>
-                  </span>
-                </transition>
+                <div
+                  v-if="['date', 'datetime', 'year-month'].indexOf(type) !== -1"
+                  :class="['vpd-year-label', directionClass]"
+                  @click="goStep('y')"
+                >
+                  <transition name="slideY">
+                    <span :key="selectedDate.xYear()">
+                      <slot name="header-year" v-bind="{ vm, selectedDate }">
+                        {{ convertToLocaleNumber(selectedDate.xYear()) }}
+                      </slot>
+                    </span>
+                  </transition>
+                </div>
+                <div
+                  v-if="type !== 'year-month'"
+                  :class="['vpd-date', directionClass]"
+                >
+                  <transition name="slideY">
+                    <span :key="formattedDate">
+                      <slot name="header-date" v-bind="{ vm, formattedDate }">
+                        {{ convertToLocaleNumber(formattedDate) }}
+                      </slot>
+                    </span>
+                  </transition>
+                </div>
+                <slot
+                  v-if="locales.length > 1"
+                  name="locales"
+                  v-bind="{ vm, locales, setLocale }"
+                >
+                  <locale-change
+                    :locale-data="localeData"
+                    :core="core"
+                    :locales="locales"
+                    class="vpd-locales"
+                    @change="setLocale"
+                  />
+                </slot>
               </div>
-              <div
-                v-if="type !== 'year-month'"
-                :class="['vpd-date', directionClass]"
-              >
-                <transition name="slideY">
-                  <span :key="formattedDate">
-                    <slot name="header-date" v-bind="{ vm, formattedDate }">
-                      {{ convertToLocaleNumber(formattedDate) }}
-                    </slot>
-                  </span>
-                </transition>
-              </div>
-              <slot
-                v-if="locales.length > 1"
-                name="locales"
-                v-bind="{ vm, locales, setLocale }"
-              >
-                <locale-change
-                  :locale-data="localeData"
+            </slot>
+            <slot
+              name="vpd-body"
+              v-bind="{
+                vm
+              }"
+            >
+              <div class="vpd-body">
+                <simple-mode
+                  v-if="simple"
+                  :lang="lang"
                   :core="core"
+                  :range="range"
+                  :color="color"
                   :locales="locales"
-                  class="vpd-locales"
-                  @change="setLocale"
-                />
-              </slot>
-            </div>
-            <div class="vpd-body">
-              <simple-mode
-                v-if="simple"
-                :lang="lang"
-                :core="core"
-                :range="range"
-                :color="color"
-                :locales="locales"
-                :visible="visible"
-                :multiple="multiple"
-                :years="years"
-                :months="months"
-                :month-days="monthDays"
-                :has-step="hasStep"
-                :selected-dates="selectedDates"
-                :formatted-date="formattedDate"
-                :set-locale="setLocale"
-                :convert-to-locale-number="convertToLocaleNumber"
-                @select-year="selectYear"
-                @select-month="selectMonth"
-                @select-day="selectDay"
-              >
-                <template #header-date="slotData">
-                  <slot name="header-date" v-bind="slotData" />
-                </template>
-                <template #locales="slotData">
-                  <slot name="locales" v-bind="slotData" />
-                </template>
-                <template #year-item="slotData">
-                  <slot name="year-item" v-bind="slotData" />
-                </template>
-                <template #month-item="slotData">
-                  <slot name="month-item" v-bind="slotData" />
-                </template>
-                <template #day-item="slotData">
-                  <slot name="day-item" v-bind="slotData" />
-                </template>
-              </simple-mode>
-              <template v-else>
-                <template v-if="hasStep('d')">
-                  <div :class="['vpd-controls', directionClassDate]">
-                    <button
-                      type="button"
-                      class="vpd-next"
-                      :title="lang.nextMonth"
-                      :disabled="nextMonthDisabled"
-                      @click="nextMonth"
-                    >
-                      <slot name="next-month">
-                        <arrow
-                          width="10"
-                          fill="#000"
-                          direction="right"
-                          style="vertical-align: middle"
-                        />
-                      </slot>
-                    </button>
-                    <button
-                      type="button"
-                      class="vpd-prev"
-                      :title="lang.prevMonth"
-                      :disabled="prevMonthDisabled"
-                      @click="prevMonth"
-                    >
-                      <slot name="prev-month">
-                        <arrow
-                          width="10"
-                          fill="#000"
-                          direction="left"
-                          style="vertical-align: middle"
-                        />
-                      </slot>
-                    </button>
-                    <transition name="slideX">
-                      <div
-                        :key="date.xMonth()"
-                        class="vpd-month-label"
-                        @click="goStep('m')"
+                  :visible="visible"
+                  :multiple="multiple"
+                  :years="years"
+                  :months="months"
+                  :month-days="monthDays"
+                  :has-step="hasStep"
+                  :selected-dates="selectedDates"
+                  :formatted-date="formattedDate"
+                  :set-locale="setLocale"
+                  :convert-to-locale-number="convertToLocaleNumber"
+                  @select-year="selectYear"
+                  @select-month="selectMonth"
+                  @select-day="selectDay"
+                >
+                  <template #header-date="slotData">
+                    <slot name="header-date" v-bind="slotData" />
+                  </template>
+                  <template #locales="slotData">
+                    <slot name="locales" v-bind="slotData" />
+                  </template>
+                  <template #year-item="slotData">
+                    <slot name="year-item" v-bind="slotData" />
+                  </template>
+                  <template #month-item="slotData">
+                    <slot name="month-item" v-bind="slotData" />
+                  </template>
+                  <template #day-item="slotData">
+                    <slot name="day-item" v-bind="slotData" />
+                  </template>
+                </simple-mode>
+                <template v-else>
+                  <template v-if="hasStep('d')">
+                    <div :class="['vpd-controls', directionClassDate]">
+                      <button
+                        type="button"
+                        class="vpd-next"
+                        :title="lang.nextMonth"
+                        :disabled="nextMonthDisabled"
+                        @click="nextMonth"
                       >
-                        <slot name="month-name" v-bind="{ vm, date, color }">
-                          <span
-                            :style="{ 'border-color': color, color }"
-                            v-text="
-                              convertToLocaleNumber(date.xFormat('jMMMM jYYYY'))
-                            "
+                        <slot name="next-month">
+                          <arrow
+                            width="10"
+                            fill="#000"
+                            direction="right"
+                            style="vertical-align: middle"
                           />
                         </slot>
-                      </div>
-                    </transition>
-                  </div>
-                  <div
-                    class="vpd-clearfix"
-                    :class="['vpd-month', directionClassDate]"
-                  >
-                    <div class="vpd-clearfix vpd-week">
-                      <div
-                        v-for="(day, i) in weekDays"
-                        :key="`${i}-${day}`"
-                        class="vpd-weekday"
+                      </button>
+                      <button
+                        type="button"
+                        class="vpd-prev"
+                        :title="lang.prevMonth"
+                        :disabled="prevMonthDisabled"
+                        @click="prevMonth"
                       >
-                        <slot name="weekday" v-bind="{ vm, day }">
-                          {{ day }}
+                        <slot name="prev-month">
+                          <arrow
+                            width="10"
+                            fill="#000"
+                            direction="left"
+                            style="vertical-align: middle"
+                          />
                         </slot>
-                      </div>
-                    </div>
-                    <div
-                      class="vpd-days"
-                      :style="{ height: month.length * 40 + 'px' }"
-                      @mouseleave="hoveredItem = null"
-                    >
-                      <transition name="slideX" :class="directionClassDate">
-                        <div :key="date.xMonth()">
-                          <div
-                            v-for="(m, mi) in monthDays"
-                            :key="mi"
-                            class="vpd-clearfix"
-                          >
-                            <div
-                              v-for="(day, di) in m"
-                              :key="di"
-                              :class="[
-                                'vpd-day',
-                                {
-                                  'vpd-selected': day.selected,
-                                  'vpd-empty': day.date == null,
-                                  'vpd-range-first': day.isFirst,
-                                  'vpd-range-last': day.isLast,
-                                  'vpd-range-between': day.isBetween,
-                                  'vpd-range-hover': hoveredItem && day.isHover
-                                },
-                                day.attributes.class
-                              ]"
-                              v-bind="day.attributes"
-                              :disabled="day.disabled"
-                              @click="selectDay(day)"
-                              @mouseover="hoveredItem = day.date"
-                            >
-                              <template v-if="day.date != null">
-                                <slot
-                                  name="day-item"
-                                  v-bind="{ vm, day, color }"
-                                >
-                                  <span
-                                    class="vpd-day-effect"
-                                    :style="{ 'background-color': color }"
-                                  />
-                                  <span
-                                    class="vpd-day-text"
-                                    v-text="
-                                      convertToLocaleNumber(day.formatted)
-                                    "
-                                  />
-                                </slot>
-                              </template>
-                            </div>
-                          </div>
+                      </button>
+                      <transition name="slideX">
+                        <div
+                          :key="date.xMonth()"
+                          class="vpd-month-label"
+                          @click="goStep('m')"
+                        >
+                          <slot name="month-name" v-bind="{ vm, date, color }">
+                            <span
+                              :style="{ 'border-color': color, color }"
+                              v-text="
+                                convertToLocaleNumber(
+                                  date.xFormat('jMMMM jYYYY')
+                                )
+                              "
+                            />
+                          </slot>
                         </div>
                       </transition>
                     </div>
-                  </div>
+                    <div
+                      class="vpd-clearfix"
+                      :class="['vpd-month', directionClassDate]"
+                    >
+                      <div class="vpd-clearfix vpd-week">
+                        <div
+                          v-for="(day, i) in weekDays"
+                          :key="`${i}-${day}`"
+                          class="vpd-weekday"
+                        >
+                          <slot name="weekday" v-bind="{ vm, day }">
+                            {{ day }}
+                          </slot>
+                        </div>
+                      </div>
+                      <div
+                        class="vpd-days"
+                        :style="{ height: month.length * 40 + 'px' }"
+                        @mouseleave="hoveredItem = null"
+                      >
+                        <transition name="slideX" :class="directionClassDate">
+                          <div :key="date.xMonth()">
+                            <div
+                              v-for="(m, mi) in monthDays"
+                              :key="mi"
+                              class="vpd-clearfix"
+                            >
+                              <div
+                                v-for="(day, di) in m"
+                                :key="di"
+                                :class="[
+                                  'vpd-day',
+                                  {
+                                    'vpd-selected': day.selected,
+                                    'vpd-empty': day.date == null,
+                                    'vpd-range-first': day.isFirst,
+                                    'vpd-range-last': day.isLast,
+                                    'vpd-range-between': day.isBetween,
+                                    'vpd-range-hover':
+                                      hoveredItem && day.isHover
+                                  },
+                                  day.attributes.class
+                                ]"
+                                v-bind="day.attributes"
+                                :disabled="day.disabled"
+                                @click="selectDay(day)"
+                                @mouseover="hoveredItem = day.date"
+                              >
+                                <template v-if="day.date != null">
+                                  <slot
+                                    name="day-item"
+                                    v-bind="{ vm, day, color }"
+                                  >
+                                    <span
+                                      class="vpd-day-effect"
+                                      :style="{ 'background-color': color }"
+                                    />
+                                    <span
+                                      class="vpd-day-text"
+                                      v-text="
+                                        convertToLocaleNumber(day.formatted)
+                                      "
+                                    />
+                                  </slot>
+                                </template>
+                              </div>
+                            </div>
+                          </div>
+                        </transition>
+                      </div>
+                    </div>
+                  </template>
+
+                  <div v-else style="height:250px" />
+
+                  <transition name="fade">
+                    <div
+                      v-if="hasStep('y')"
+                      v-show="currentStep === 'y'"
+                      ref="year"
+                      :class="[
+                        'vpd-addon-list',
+                        { 'vpd-can-close': steps.length > 1 }
+                      ]"
+                    >
+                      <div class="vpd-addon-list-content">
+                        <div
+                          v-for="(year, yi) in years"
+                          :key="yi"
+                          v-bind="year.attributes"
+                          :class="[
+                            'vpd-addon-list-item',
+                            { 'vpd-selected': year.selected },
+                            year.attributes.class
+                          ]"
+                          :style="[
+                            { color: year.selected ? color : '' },
+                            year.attributes.style
+                          ]"
+                          :disabled="year.disabled"
+                          @click="selectYear(year)"
+                        >
+                          <slot name="year-item" v-bind="{ vm, year, color }">
+                            {{ convertToLocaleNumber(year.xFormat('jYYYY')) }}
+                          </slot>
+                        </div>
+                      </div>
+                    </div>
+                  </transition>
+
+                  <transition name="fade">
+                    <div
+                      v-if="hasStep('m')"
+                      v-show="currentStep === 'm'"
+                      ref="month"
+                      :class="[
+                        'vpd-addon-list vpd-month-list',
+                        { 'vpd-can-close': steps.length > 1 }
+                      ]"
+                    >
+                      <div class="vpd-addon-list-content">
+                        <div
+                          v-for="(monthItem, mi) in months"
+                          :key="mi"
+                          v-bind="monthItem.attributes"
+                          :class="[
+                            'vpd-addon-list-item',
+                            { 'vpd-selected': monthItem.selected },
+                            monthItem.attributes.class
+                          ]"
+                          :disabled="monthItem.disabled"
+                          :style="[
+                            { color: monthItem.selected ? color : '' },
+                            monthItem.attributes.style
+                          ]"
+                          @click="selectMonth(monthItem)"
+                        >
+                          <slot
+                            name="month-item"
+                            v-bind="{ vm, monthItem, color }"
+                          >
+                            {{ monthItem.xFormat('jMMMM') }}
+                          </slot>
+                        </div>
+                      </div>
+                    </div>
+                  </transition>
+
+                  <transition name="fade">
+                    <span
+                      v-if="
+                        steps.length > 1 && currentStep !== 'd' && hasStep('d')
+                      "
+                      class="vpd-close-addon"
+                      @click="goStep('d')"
+                    >
+                      <slot name="close-btn" v-bind="{ vm }">x</slot>
+                    </span>
+                  </transition>
                 </template>
 
-                <div v-else style="height:250px" />
-
                 <transition name="fade">
-                  <div
-                    v-if="hasStep('y')"
-                    v-show="currentStep === 'y'"
-                    ref="year"
-                    :class="[
-                      'vpd-addon-list',
-                      { 'vpd-can-close': steps.length > 1 }
-                    ]"
-                  >
-                    <div class="vpd-addon-list-content">
-                      <div
-                        v-for="(year, yi) in years"
-                        :key="yi"
-                        v-bind="year.attributes"
-                        :class="[
-                          'vpd-addon-list-item',
-                          { 'vpd-selected': year.selected },
-                          year.attributes.class
-                        ]"
-                        :style="[
-                          { color: year.selected ? color : '' },
-                          year.attributes.style
-                        ]"
-                        :disabled="year.disabled"
-                        @click="selectYear(year)"
-                      >
-                        <slot name="year-item" v-bind="{ vm, year, color }">
-                          {{ convertToLocaleNumber(year.xFormat('jYYYY')) }}
-                        </slot>
-                      </div>
-                    </div>
-                  </div>
+                  <time-section
+                    v-if="hasStep('t')"
+                    v-show="currentStep === 't'"
+                    ref="time"
+                    v-model:date="date"
+                    v-model:time="time"
+                    :is-more="isMore"
+                    :is-lower="isLower"
+                    :min-date="minDate"
+                    :max-date="maxDate"
+                    :jump-minute="jumpMinute"
+                    :round-minute="roundMinute"
+                    :get-highlights="getHighlights"
+                    :selected-dates="selectedDates"
+                    :convert-to-locale-number="convertToLocaleNumber"
+                  />
                 </transition>
 
-                <transition name="fade">
-                  <div
-                    v-if="hasStep('m')"
-                    v-show="currentStep === 'm'"
-                    ref="month"
-                    :class="[
-                      'vpd-addon-list vpd-month-list',
-                      { 'vpd-can-close': steps.length > 1 }
-                    ]"
-                  >
-                    <div class="vpd-addon-list-content">
-                      <div
-                        v-for="(monthItem, mi) in months"
-                        :key="mi"
-                        v-bind="monthItem.attributes"
-                        :class="[
-                          'vpd-addon-list-item',
-                          { 'vpd-selected': monthItem.selected },
-                          monthItem.attributes.class
-                        ]"
-                        :disabled="monthItem.disabled"
-                        :style="[
-                          { color: monthItem.selected ? color : '' },
-                          monthItem.attributes.style
-                        ]"
-                        @click="selectMonth(monthItem)"
-                      >
-                        <slot
-                          name="month-item"
-                          v-bind="{ vm, monthItem, color }"
-                        >
-                          {{ monthItem.xFormat('jMMMM') }}
-                        </slot>
-                      </div>
-                    </div>
-                  </div>
-                </transition>
-
-                <transition name="fade">
-                  <span
-                    v-if="
-                      steps.length > 1 && currentStep !== 'd' && hasStep('d')
-                    "
-                    class="vpd-close-addon"
-                    @click="goStep('d')"
-                  >
-                    <slot name="close-btn" v-bind="{ vm }">x</slot>
-                  </span>
-                </transition>
-              </template>
-
-              <transition name="fade">
-                <time-section
-                  v-if="hasStep('t')"
-                  v-show="currentStep === 't'"
-                  ref="time"
-                  v-model:date="date"
-                  v-model:time="time"
-                  :is-more="isMore"
-                  :is-lower="isLower"
-                  :min-date="minDate"
-                  :max-date="maxDate"
-                  :jump-minute="jumpMinute"
-                  :round-minute="roundMinute"
-                  :get-highlights="getHighlights"
-                  :selected-dates="selectedDates"
-                  :convert-to-locale-number="convertToLocaleNumber"
-                />
-              </transition>
-
-              <template v-if="autoSubmit && !hasStep('t')">
-                <br v-if="!simple" />
-              </template>
-              <div v-else class="vpd-actions">
-                <slot
-                  name="vpd-actions"
-                  v-bind="{
-                    vm,
-                    canSubmit,
-                    color,
-                    submit,
-                    lang,
-                    goToday
-                  }"
-                >
+                <template v-if="autoSubmit && !hasStep('t')">
+                  <br v-if="!simple" />
+                </template>
+                <div v-else class="vpd-actions">
                   <slot
-                    name="submit-btn"
-                    v-bind="{ vm, canSubmit, color, submit, lang }"
+                    name="vpd-actions"
+                    v-bind="{
+                      vm,
+                      canSubmit,
+                      color,
+                      submit,
+                      lang,
+                      goToday
+                    }"
                   >
-                    <button
-                      type="button"
-                      :disabled="!canSubmit"
-                      :style="{ color }"
-                      @click="submit"
-                      v-text="lang.submit"
-                    />
-                  </slot>
+                    <slot
+                      name="submit-btn"
+                      v-bind="{ vm, canSubmit, color, submit, lang }"
+                    >
+                      <button
+                        type="button"
+                        :disabled="!canSubmit"
+                        :style="{ color }"
+                        @click="submit"
+                        v-text="lang.submit"
+                      />
+                    </slot>
 
-                  <slot
-                    v-if="!inline"
-                    name="cancel-btn"
-                    v-bind="{ vm, color, lang }"
-                  >
-                    <button
-                      type="button"
-                      :style="{ color }"
-                      @click="visible = false"
-                      v-text="lang.cancel"
-                    />
-                  </slot>
+                    <slot
+                      v-if="!inline"
+                      name="cancel-btn"
+                      v-bind="{ vm, color, lang }"
+                    >
+                      <button
+                        type="button"
+                        :style="{ color }"
+                        @click="visible = false"
+                        v-text="lang.cancel"
+                      />
+                    </slot>
 
-                  <slot
-                    v-if="showNowBtn && canGoToday"
-                    name="now-btn"
-                    v-bind="{ vm, color, goToday, lang }"
-                  >
-                    <button
-                      type="button"
-                      :style="{ color }"
-                      @click="goToday"
-                      v-text="lang.now"
-                    />
+                    <slot
+                      v-if="showNowBtn && canGoToday"
+                      name="now-btn"
+                      v-bind="{ vm, color, goToday, lang }"
+                    >
+                      <button
+                        type="button"
+                        :style="{ color }"
+                        @click="goToday"
+                        v-text="lang.now"
+                      />
+                    </slot>
                   </slot>
-                </slot>
+                </div>
               </div>
-            </div>
+            </slot>
           </div>
         </div>
       </div>
