@@ -25,7 +25,7 @@
   "files": [
     "src",
     "dist/*.js",
-    "index.d.ts"
+    "index.d.ts" 
   ],
   "scripts": {
     "serve": "vue-cli-service serve",
