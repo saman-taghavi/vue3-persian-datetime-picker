@@ -882,6 +882,7 @@ export default {
     'next-month',
     'prev-month'
   ],
+  expose: ['focus', 'goToday', 'prevMonth', 'nextMonth'],
   data() {
     let defaultLocale = this.locale.split(',')[0]
     let coreModule = new CoreModule(defaultLocale, this.localeConfig)
