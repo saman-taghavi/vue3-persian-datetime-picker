@@ -398,42 +398,54 @@
               </template>
               <div v-else class="vpd-actions">
                 <slot
-                  name="submit-btn"
-                  v-bind="{ vm, canSubmit, color, submit, lang }"
+                  name="vpd-actions"
+                  v-bind="{
+                    vm,
+                    canSubmit,
+                    color,
+                    submit,
+                    lang,
+                    goToday
+                  }"
                 >
-                  <button
-                    type="button"
-                    :disabled="!canSubmit"
-                    :style="{ color }"
-                    @click="submit"
-                    v-text="lang.submit"
-                  />
-                </slot>
+                  <slot
+                    name="submit-btn"
+                    v-bind="{ vm, canSubmit, color, submit, lang }"
+                  >
+                    <button
+                      type="button"
+                      :disabled="!canSubmit"
+                      :style="{ color }"
+                      @click="submit"
+                      v-text="lang.submit"
+                    />
+                  </slot>
 
-                <slot
-                  v-if="!inline"
-                  name="cancel-btn"
-                  v-bind="{ vm, color, lang }"
-                >
-                  <button
-                    type="button"
-                    :style="{ color }"
-                    @click="visible = false"
-                    v-text="lang.cancel"
-                  />
-                </slot>
+                  <slot
+                    v-if="!inline"
+                    name="cancel-btn"
+                    v-bind="{ vm, color, lang }"
+                  >
+                    <button
+                      type="button"
+                      :style="{ color }"
+                      @click="visible = false"
+                      v-text="lang.cancel"
+                    />
+                  </slot>
 
-                <slot
-                  v-if="showNowBtn && canGoToday"
-                  name="now-btn"
-                  v-bind="{ vm, color, goToday, lang }"
-                >
-                  <button
-                    type="button"
-                    :style="{ color }"
-                    @click="goToday"
-                    v-text="lang.now"
-                  />
+                  <slot
+                    v-if="showNowBtn && canGoToday"
+                    name="now-btn"
+                    v-bind="{ vm, color, goToday, lang }"
+                  >
+                    <button
+                      type="button"
+                      :style="{ color }"
+                      @click="goToday"
+                      v-text="lang.now"
+                    />
+                  </slot>
                 </slot>
               </div>
             </div>
