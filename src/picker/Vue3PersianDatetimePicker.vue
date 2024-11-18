@@ -251,61 +251,63 @@
                           </slot>
                         </div>
                       </div>
-                      <div
-                        class="vpd-days"
-                        :style="{ height: month.length * 40 + 'px' }"
-                        @mouseleave="hoveredItem = null"
-                      >
-                        <transition name="slideX" :class="directionClassDate">
-                          <div :key="date.xMonth()">
-                            <div
-                              v-for="(m, mi) in monthDays"
-                              :key="mi"
-                              class="vpd-clearfix"
-                            >
+                      <slot name="vpd-days" v-bind="{ vm }">
+                        <div
+                          class="vpd-days"
+                          :style="{ height: month.length * 40 + 'px' }"
+                          @mouseleave="hoveredItem = null"
+                        >
+                          <transition name="slideX" :class="directionClassDate">
+                            <div :key="date.xMonth()">
                               <div
-                                v-for="(day, di) in m"
-                                :key="di"
-                                :class="[
-                                  'vpd-day',
-                                  {
-                                    'vpd-selected': day.selected,
-                                    'vpd-empty': day.date == null,
-                                    'vpd-range-first': day.isFirst,
-                                    'vpd-range-last': day.isLast,
-                                    'vpd-range-between': day.isBetween,
-                                    'vpd-range-hover':
-                                      hoveredItem && day.isHover
-                                  },
-                                  day.attributes.class
-                                ]"
-                                v-bind="day.attributes"
-                                :disabled="day.disabled"
-                                @click="selectDay(day)"
-                                @mouseover="hoveredItem = day.date"
+                                v-for="(m, mi) in monthDays"
+                                :key="mi"
+                                class="vpd-clearfix"
                               >
-                                <template v-if="day.date != null">
-                                  <slot
-                                    name="day-item"
-                                    v-bind="{ vm, day, color }"
-                                  >
-                                    <span
-                                      class="vpd-day-effect"
-                                      :style="{ 'background-color': color }"
-                                    />
-                                    <span
-                                      class="vpd-day-text"
-                                      v-text="
-                                        convertToLocaleNumber(day.formatted)
-                                      "
-                                    />
-                                  </slot>
-                                </template>
+                                <div
+                                  v-for="(day, di) in m"
+                                  :key="di"
+                                  :class="[
+                                    'vpd-day',
+                                    {
+                                      'vpd-selected': day.selected,
+                                      'vpd-empty': day.date == null,
+                                      'vpd-range-first': day.isFirst,
+                                      'vpd-range-last': day.isLast,
+                                      'vpd-range-between': day.isBetween,
+                                      'vpd-range-hover':
+                                        hoveredItem && day.isHover
+                                    },
+                                    day.attributes.class
+                                  ]"
+                                  v-bind="day.attributes"
+                                  :disabled="day.disabled"
+                                  @click="selectDay(day)"
+                                  @mouseover="hoveredItem = day.date"
+                                >
+                                  <template v-if="day.date != null">
+                                    <slot
+                                      name="day-item"
+                                      v-bind="{ vm, day, color }"
+                                    >
+                                      <span
+                                        class="vpd-day-effect"
+                                        :style="{ 'background-color': color }"
+                                      />
+                                      <span
+                                        class="vpd-day-text"
+                                        v-text="
+                                          convertToLocaleNumber(day.formatted)
+                                        "
+                                      />
+                                    </slot>
+                                  </template>
+                                </div>
                               </div>
                             </div>
-                          </div>
-                        </transition>
-                      </div>
+                          </transition>
+                        </div>
+                      </slot>
                     </div>
                   </template>
 
