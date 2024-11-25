@@ -1,7 +1,7 @@
 {
   "name": "pateh-picker",
   "description": "A vue plugin to select jalali date and time based on vue3-pateh-datetime-picker by Mohammad Talkhabi",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "author": "saman-taghavi",
   "license": "MIT",
   "main": "dist/pateh-picker.common.js",

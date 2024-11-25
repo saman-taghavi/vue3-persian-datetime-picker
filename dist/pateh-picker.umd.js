@@ -138,7 +138,7 @@ if (typeof window !== 'undefined') {
 // EXTERNAL MODULE: external {"commonjs":"vue","commonjs2":"vue","root":"Vue"}
 var external_commonjs_vue_commonjs2_vue_root_Vue_ = __webpack_require__("8bbf");
 
-// CONCATENATED MODULE: ./node_modules/.pnpm/cache-loader@4.1.0_webpack@4.47.0/node_modules/cache-loader/dist/cjs.js??ref--13-0!./node_modules/.pnpm/thread-loader@2.1.3_webpack@4.47.0/node_modules/thread-loader/dist/cjs.js!./node_modules/.pnpm/babel-loader@8.4.1_@babel+core@7.26.0_webpack@4.47.0/node_modules/babel-loader/lib!./node_modules/.pnpm/vue-loader@16.8.3_@vue+compiler-sfc@3.5.12_vue@3.5.12_webpack@4.47.0/node_modules/vue-loader/dist/templateLoader.js??ref--6!./node_modules/.pnpm/cache-loader@4.1.0_webpack@4.47.0/node_modules/cache-loader/dist/cjs.js??ref--1-0!./node_modules/.pnpm/vue-loader@16.8.3_@vue+compiler-sfc@3.5.12_vue@3.5.12_webpack@4.47.0/node_modules/vue-loader/dist??ref--1-1!./src/picker/Vue3PersianDatetimePicker.vue?vue&type=template&id=2e1617e3
+// CONCATENATED MODULE: ./node_modules/.pnpm/cache-loader@4.1.0_webpack@4.47.0/node_modules/cache-loader/dist/cjs.js??ref--13-0!./node_modules/.pnpm/thread-loader@2.1.3_webpack@4.47.0/node_modules/thread-loader/dist/cjs.js!./node_modules/.pnpm/babel-loader@8.4.1_@babel+core@7.26.0_webpack@4.47.0/node_modules/babel-loader/lib!./node_modules/.pnpm/vue-loader@16.8.3_@vue+compiler-sfc@3.5.12_vue@3.5.12_webpack@4.47.0/node_modules/vue-loader/dist/templateLoader.js??ref--6!./node_modules/.pnpm/cache-loader@4.1.0_webpack@4.47.0/node_modules/cache-loader/dist/cjs.js??ref--1-0!./node_modules/.pnpm/vue-loader@16.8.3_@vue+compiler-sfc@3.5.12_vue@3.5.12_webpack@4.47.0/node_modules/vue-loader/dist??ref--1-1!./src/picker/Vue3PersianDatetimePicker.vue?vue&type=template&id=c382fd12
 
 const _hoisted_1 = ["data-type", "data-placement", "data-locale", "data-locale-dir"];
 const _hoisted_2 = ["for"];
@@ -420,7 +420,9 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
         vm: $options.vm,
         day
       }), () => [Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createTextVNode"])(Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(day), 1)])]);
-    }), 128))]), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("div", {
+    }), 128))]), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["renderSlot"])(_ctx.$slots, "vpd-days", Object(external_commonjs_vue_commonjs2_vue_root_Vue_["normalizeProps"])(Object(external_commonjs_vue_commonjs2_vue_root_Vue_["guardReactiveProps"])({
+      vm: $options.vm
+    })), () => [Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("div", {
       class: "vpd-days",
       style: Object(external_commonjs_vue_commonjs2_vue_root_Vue_["normalizeStyle"])({
         height: $options.month.length * 40 + 'px'
@@ -471,7 +473,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
         }), 128))]);
       }), 128))]))]),
       _: 3
-    }, 8, ["class"])], 36)], 2)], 64)) : (Object(external_commonjs_vue_commonjs2_vue_root_Vue_["openBlock"])(), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementBlock"])("div", _hoisted_17)), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createVNode"])(external_commonjs_vue_commonjs2_vue_root_Vue_["Transition"], {
+    }, 8, ["class"])], 36)])], 2)], 64)) : (Object(external_commonjs_vue_commonjs2_vue_root_Vue_["openBlock"])(), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementBlock"])("div", _hoisted_17)), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createVNode"])(external_commonjs_vue_commonjs2_vue_root_Vue_["Transition"], {
       name: "fade"
     }, {
       default: Object(external_commonjs_vue_commonjs2_vue_root_Vue_["withCtx"])(() => [$options.hasStep('y') ? Object(external_commonjs_vue_commonjs2_vue_root_Vue_["withDirectives"])((Object(external_commonjs_vue_commonjs2_vue_root_Vue_["openBlock"])(), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementBlock"])("div", {
@@ -619,7 +621,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     _: 3
   }, 8, ["name"])], 10, _hoisted_1);
 }
-// CONCATENATED MODULE: ./src/picker/Vue3PersianDatetimePicker.vue?vue&type=template&id=2e1617e3
+// CONCATENATED MODULE: ./src/picker/Vue3PersianDatetimePicker.vue?vue&type=template&id=c382fd12
 
 // EXTERNAL MODULE: ./src/picker/assets/scss/style.scss
 var style = __webpack_require__("4635");
@@ -2639,7 +2641,7 @@ const Core = function (defaultLocaleName, defaultOptions) {
     }
   },
   emits: ['update:modelValue', 'locale-change', 'change', 'open', 'close', 'year-change', 'month-change', 'next-month', 'prev-month'],
-  expose: ['focus', 'goToday', 'prevMonth', 'nextMonth'],
+  expose: ['focus', 'goToday', 'prevMonth', 'nextMonth', 'getThis'],
   data() {
     let defaultLocale = this.locale.split(',')[0];
     let coreModule = new core(defaultLocale, this.localeConfig);
@@ -3327,6 +3329,9 @@ const Core = function (defaultLocaleName, defaultOptions) {
         }
         return false;
       }
+    },
+    getThis() {
+      return this;
     },
     hasStep(step) {
       return this.steps.indexOf(step) !== -1;

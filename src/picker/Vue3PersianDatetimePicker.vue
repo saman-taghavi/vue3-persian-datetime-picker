@@ -920,7 +920,7 @@ export default {
     'next-month',
     'prev-month'
   ],
-  expose: ['focus', 'goToday', 'prevMonth', 'nextMonth'],
+  expose: ['focus', 'goToday', 'prevMonth', 'nextMonth', 'getThis'],
   data() {
     let defaultLocale = this.locale.split(',')[0]
     let coreModule = new CoreModule(defaultLocale, this.localeConfig)
@@ -1654,6 +1654,9 @@ export default {
         }
         return false
       }
+    },
+    getThis() {
+      return this
     },
     hasStep(step) {
       return this.steps.indexOf(step) !== -1
